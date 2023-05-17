@@ -13,7 +13,7 @@ export default async function Page() {
         </span>
       </div>
       <div className='w-full gap-2 mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left'>
-        {data.map((student) => (
+        {data.map((student: any) => (
           <StudentCard key={student.id} {...student} />
         ))}
       </div>
