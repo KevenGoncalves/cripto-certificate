@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider              = "zod-prisma"
+  output                = "../zod"
+  relationModel         = true
+  modelCase             = "camelCase"
+  modelSuffix           = "ZodType"
+  useDecimalJs          = true
+  prismaJsonNullability = true
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL")
+  directUrl         = env("POSTGRES_URL_NON_POOLING")
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Student {
+  /// @zod.optional()
+  id          String       @id @default(cuid())
+  name        String
+  birthdate   DateTime
+  course      String
+  period      String
+  certificate Certificate?
+
+  /// @zod.optional()
+  createdAt DateTime @default(now())
+
+  /// @zod.optional()
+  updatedAt DateTime @updatedAt
+}
+
+model Certificate {
+  /// @zod.optional()
+  id        String  @id @default(cuid())
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String  @unique
+
+  /// @zod.optional()
+  createdAt DateTime @default(now())
+
+  /// @zod.optional()
+  updatedAt DateTime @updatedAt
+}
